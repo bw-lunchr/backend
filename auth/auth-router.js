@@ -44,6 +44,13 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.get('/', (req, res) => {
+  Admins.find()
+    .then(admins => {
+      res.status(200).json(admins)
+    })
+})
+
 function generateToken(admin) {
   const payload = {
     email: admin.email
