@@ -25,9 +25,16 @@ router.post('/login', (req, res) => {
   Admins.findBy({ email })
     .first()
     .then(admin => {
+      console.log(admin.password, password)
       
       // check password is correct
       if (admin && bcrypt.compareSync(password, admin.password)) {
+        const token = generateToken(admin)
+        res.status(200).json({
+          message: `${admin.email} added as an admin!, have a token...`,
+          token, // attach the token as part of the response
+        });
+      } else if (admin.password == password && admin.email == email) {
         const token = generateToken(admin)
         res.status(200).json({
           message: `${admin.email} added as an admin!, have a token...`,

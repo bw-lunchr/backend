@@ -6,9 +6,17 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('admins').insert([
         {
-          email: 'test@gmail.com', 
-          password: 'password123'
-        }
+          email: 'test1@gmail.com',
+          password: 'password1'
+        },
+        {
+          email: 'test2@gmail.com',
+          password: 'password2'
+        },
+        {
+          email: 'test3@gmail.com',
+          password: 'password3'
+        },
       ]);
     });
 };
