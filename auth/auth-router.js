@@ -2,6 +2,7 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Admins = require('../admins/admins-model.js');
+const Schools = require('../schools/schools-model.js')
 const secrets = require('../config/secrets.js');
 
 // for endpoints beginning with /api/auth
@@ -59,6 +60,18 @@ router.route('/:id/schools')
     })
     .catch(err => {
       res.status(400).json(err);
+    })
+})
+.post((req, res) => {
+  const { id } = req.params;
+  const newSchool = req.body;
+  newSchool.admin_id = id;
+  Schools.addSchool(newSchool)
+    .then(data => {
+      res.status(200).json(data);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Something went wrong." })
     })
 })
 

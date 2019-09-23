@@ -6,6 +6,7 @@ module.exports = {
   add, 
   update, 
   remove,
+  addSchool
 }
 
 function find() {
@@ -37,4 +38,15 @@ function remove(id) {
   return db('schools')
   .where('id', id)
   .del();
+}
+
+function addSchool(newSchool) {
+  console.log(newSchool)
+  return db('schools')
+  .insert(newSchool)
+  .then(([id]) => {
+    return findById(id)
+    .where({ id })
+    .first()
+  });
 }
