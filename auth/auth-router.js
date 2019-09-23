@@ -49,6 +49,19 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.route('/:id/schools')
+.get((req, res) => {
+  const id = req.params.id;
+
+  Admins.getSchoolsById(id)
+    .then(schools => {
+      res.status(200).json(schools)
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    })
+})
+
 router.get('/', (req, res) => {
   Admins.find()
     .then(admins => {

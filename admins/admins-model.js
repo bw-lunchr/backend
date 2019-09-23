@@ -5,6 +5,7 @@ module.exports = {
   find,
   findBy,
   findById,
+  getSchoolsById
 };
 
 function find() {
@@ -25,4 +26,9 @@ function findById(id) {
   return db('admins')
     .where({ id })
     .first();
+}
+
+function getSchoolsById(adminId) {
+  return db('schools')
+    .where('admin_id', adminId)
 }
