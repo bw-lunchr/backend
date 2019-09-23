@@ -12,7 +12,7 @@ server.use('/api/admin', authRouter);
 server.use('/api/schools', schoolsRouter);
 
 // SANITY ENDPOINT
-server.get('/', (req, res) => {
+server.get('/api', (req, res) => {
   res.status(200).send({ message: "Good to go." })
 })
 
