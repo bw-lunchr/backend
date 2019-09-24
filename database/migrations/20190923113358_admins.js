@@ -6,7 +6,10 @@ exports.up = function(knex) {
       .string('email', 255)
       .notNullable()
       .unique();
+      
     table.string('password', 255).notNullable();
+
+    table.string('fullName', 255).notNullable();
   });
 };
 

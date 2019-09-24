@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const server = express();
+const secrets = require('../config/secrets.js')
 
 const authRouter = require('../auth/auth-router.js');
 const schoolsRouter = require('../schools/schools-router.js');

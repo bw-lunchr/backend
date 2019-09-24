@@ -5,6 +5,8 @@ const Admins = require('../admins/admins-model.js');
 const Schools = require('../schools/schools-model.js')
 const secrets = require('../config/secrets.js');
 
+const restricted = require('./authenticate-middleware.js')
+
 // for endpoints beginning with /api/auth
 router.post('/register', (req, res) => {
   let admin = req.body;
@@ -22,24 +24,30 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
   let { email, password } = req.body;
+  console.log(req.body)
 
   Admins.findBy({ email })
     .first()
     .then(admin => {
       console.log(admin.password, password)
+      console.log(admin)
       
       // check password is correct
       if (admin && bcrypt.compareSync(password, admin.password)) {
         const token = generateToken(admin)
         res.status(200).json({
-          message: `${admin.email} added as an admin!, have a token...`,
-          token, // attach the token as part of the response
+          message: 'Logged in!',
+          fullName: admin.fullName,
+          email: admin.email,
+          token: token
         });
       } else if (admin.password == password && admin.email == email) {
         const token = generateToken(admin)
         res.status(200).json({
-          message: `${admin.email} added as an admin!, have a token...`,
-          token, // attach the token as part of the response
+          message: 'Logged in!',
+          fullName: admin.fullName,
+          email: admin.email,
+          token: token
         });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
@@ -51,7 +59,7 @@ router.post('/login', (req, res) => {
 });
 
 router.route('/:id/schools')
-.get((req, res) => {
+.get(restricted, (req, res) => {
   const id = req.params.id;
 
   Admins.getSchoolsById(id)
