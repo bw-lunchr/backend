@@ -83,6 +83,7 @@ router.route('/:id/schools')
     })
 })
 
+// GET ALL ADMINS
 router.get('/', (req, res) => {
   Admins.find()
     .then(admins => {

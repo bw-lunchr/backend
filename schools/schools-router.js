@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const Schools = require('./schools-model.js');
 
+const restricted = require('../auth/authenticate-middleware.js');
+
 router.route('/')
 .get((req, res) => {
   Schools.find()
@@ -24,6 +26,27 @@ router.route('/:id')
       res.status(400).json(err);
     })
 })
+.delete(restricted, (req, res) => {
+  const id = req.params.id;
 
+  Schools.remove(id)
+    .then(data => {
+      res.json({ message: `${data} record(s) have been removed.`})
+    })
+    .catch(err => {
+      res.jsonp(400).json(err);
+    })
+})
+.put(restricted, (req, res) => {
+  let id = req.params.id;
+  let updatedSchool = req.body;
+  Schools.update(updatedSchool, id)
+    .then(data => {
+      res.status(201).json({ message: "Resource updated!" })
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    })
+})
 
 module.exports = router;

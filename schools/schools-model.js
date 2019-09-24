@@ -41,7 +41,6 @@ function remove(id) {
 }
 
 function addSchool(newSchool) {
-  console.log(newSchool)
   return db('schools')
   .insert(newSchool)
   .then(([id]) => {
