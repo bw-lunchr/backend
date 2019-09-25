@@ -71,7 +71,12 @@ router.route('/:id')
   let id = req.params.id;
   Admins.update(updatedAdmin, id)
     .then(data => {
-      res.status(201).json(data)
+      res.status(201).json({
+        message: `Updated ${data.fullName}'s record.`,
+        email: data.email,
+        fullName: data.fullName,
+        password: data.password
+      })
     })
     .catch(err => {
       res.status(400).json({ message: "Something went wrong." })

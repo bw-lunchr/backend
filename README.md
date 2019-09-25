@@ -23,6 +23,7 @@
 ## UPDATE Admin (Requires Authorization header)
  `https://bw-luncher.herokuapp.com/api/admin/:id`
  - PUT request: Where ":id" is the id of the admin.
+ - May be used to update admin's name, email, and password.
 
 
 # School Endpoints

@@ -38,5 +38,8 @@ function getSchoolsById(adminId) {
 function update(updatedAdmin, id) {
   return db('admins')
   .where({ id })
-  .update(updatedAdmin);
+  .update(updatedAdmin)
+  .then((id) => {
+    return findById(id);
+  });
 }

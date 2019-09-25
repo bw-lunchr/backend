@@ -28,10 +28,14 @@ function add(newSchool) {
     });
 }
 
-function update(updatedSchool, id) {
+function update(updatedSchool, schoolId) {
+  console.log(schoolId)
   return db('schools')
-  .where({ id })
-  .update(updatedSchool);
+  .where('id', schoolId)
+  .update(updatedSchool)
+  .then((id) => {
+    return findById(schoolId);
+  });
 }
 
 function remove(id) {

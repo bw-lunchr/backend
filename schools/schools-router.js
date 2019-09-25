@@ -42,7 +42,12 @@ router.route('/:id')
   let updatedSchool = req.body;
   Schools.update(updatedSchool, id)
     .then(data => {
-      res.status(201).json({ message: "Resource updated!" })
+      res.status(201).json({
+        message: "School updated.",
+        name: data.name,
+        location: data.location,
+        requested_funds: data.requested_funds
+      })
     })
     .catch(err => {
       res.status(400).json(err);
