@@ -24,13 +24,10 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res) => {
   let { email, password } = req.body;
-  console.log(req.body)
 
   Admins.findBy({ email })
     .first()
     .then(admin => {
-      console.log(admin.password, password)
-      console.log(admin)
       
       // check password is correct
       if (admin && bcrypt.compareSync(password, admin.password)) {
@@ -58,6 +55,29 @@ router.post('/login', (req, res) => {
     });
 });
 
+router.route('/:id')
+.get(restricted, (req, res) => {
+  let id = req.params.id;
+  Admins.findById(id)
+    .then(admin => {
+      res.status(200).json(admin)
+    })
+    .catch(err => {
+      res.status(400).json({ message: "Something went wrong." })
+    })
+})
+.put(restricted, (req, res) => {
+  let updatedAdmin = req.body;
+  let id = req.params.id;
+  Admins.update(updatedAdmin, id)
+    .then(data => {
+      res.status(201).json(data)
+    })
+    .catch(err => {
+      res.status(400).json({ message: "Something went wrong." })
+    })
+})
+
 router.route('/:id/schools')
 .get(restricted, (req, res) => {
   const id = req.params.id;
@@ -70,7 +90,7 @@ router.route('/:id/schools')
       res.status(400).json(err);
     })
 })
-.post((req, res) => {
+.post(restricted, (req, res) => {
   const { id } = req.params;
   const newSchool = req.body;
   newSchool.admin_id = id;

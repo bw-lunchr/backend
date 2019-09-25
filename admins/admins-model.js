@@ -5,7 +5,8 @@ module.exports = {
   find,
   findBy,
   findById,
-  getSchoolsById
+  getSchoolsById,
+  update
 };
 
 function find() {
@@ -32,4 +33,10 @@ function findById(id) {
 function getSchoolsById(adminId) {
   return db('schools')
     .where('admin_id', adminId)
+}
+
+function update(updatedAdmin, id) {
+  return db('admins')
+  .where({ id })
+  .update(updatedAdmin);
 }
