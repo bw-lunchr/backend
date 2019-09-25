@@ -29,7 +29,6 @@ function add(newSchool) {
 }
 
 function update(updatedSchool, schoolId) {
-  console.log(schoolId)
   return db('schools')
   .where('id', schoolId)
   .update(updatedSchool)

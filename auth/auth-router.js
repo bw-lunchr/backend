@@ -8,6 +8,7 @@ const secrets = require('../config/secrets.js');
 const restricted = require('./authenticate-middleware.js')
 
 // for endpoints beginning with /api/auth
+// REGISTER ENDPOINT
 router.post('/register', (req, res) => {
   let admin = req.body;
   const hash = bcrypt.hashSync(admin.password, 10); // 2 ^ n
@@ -22,6 +23,7 @@ router.post('/register', (req, res) => {
     });
 });
 
+// LOGIN ENDPOINT
 router.post('/login', (req, res) => {
   let { email, password } = req.body;
 
@@ -55,6 +57,7 @@ router.post('/login', (req, res) => {
     });
 });
 
+// ENDPOINT SPECIFIC TO ADMIN'S ID
 router.route('/:id')
 .get(restricted, (req, res) => {
   let id = req.params.id;
@@ -83,6 +86,7 @@ router.route('/:id')
     })
 })
 
+// ENDPOINT FOR SCHOOLS SPECIFIC TO ADMIN ID
 router.route('/:id/schools')
 .get(restricted, (req, res) => {
   const id = req.params.id;

@@ -35,11 +35,11 @@ function getSchoolsById(adminId) {
     .where('admin_id', adminId)
 }
 
-function update(updatedAdmin, id) {
+function update(updatedAdmin, adminId) {
   return db('admins')
-  .where({ id })
+  .where('id', adminId)
   .update(updatedAdmin)
   .then((id) => {
-    return findById(id);
+    return findById(adminId);
   });
 }
