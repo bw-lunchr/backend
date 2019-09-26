@@ -59,7 +59,7 @@ router.post('/login', (req, res) => {
 
 // ENDPOINT SPECIFIC TO ADMIN'S ID
 router.route('/:id')
-.get(restricted, (req, res) => {
+.get(restricted, validateAdminId, (req, res) => {
   let id = req.params.id;
   Admins.findById(id)
     .then(admin => {
@@ -69,7 +69,7 @@ router.route('/:id')
       res.status(400).json({ message: "Something went wrong." })
     })
 })
-.put(restricted, (req, res) => {
+.put(restricted, validateAdminId, (req, res) => {
   let updatedAdmin = req.body;
   let id = req.params.id;
   Admins.update(updatedAdmin, id)
@@ -88,7 +88,7 @@ router.route('/:id')
 
 // ENDPOINT FOR SCHOOLS SPECIFIC TO ADMIN ID
 router.route('/:id/schools')
-.get(restricted, (req, res) => {
+.get(restricted, validateAdminId, (req, res) => {
   const id = req.params.id;
 
   Admins.getSchoolsById(id)
@@ -99,10 +99,11 @@ router.route('/:id/schools')
       res.status(400).json(err);
     })
 })
-.post(restricted, (req, res) => {
+.post(restricted, validateAdminId, validateSchool, (req, res) => {
   const { id } = req.params;
   const newSchool = req.body;
   newSchool.admin_id = id;
+  console.log(id, newSchool, id)
   Schools.addSchool(newSchool)
     .then(data => {
       res.status(200).json(data);
@@ -130,6 +131,68 @@ function generateToken(admin) {
   }
   // bring in the secret from the secrets file
   return jwt.sign(payload, secrets.jwtSecret, options)
+}
+
+function validateAdminId(req, res, next) {
+  const id = req.params.id;
+  Admins.findById(id)  
+    .then(user => {
+      req.user = user;
+    })
+    .catch(err => {
+      res.status(400).send("Invalid Admin Id")
+    })
+    next();
+};
+
+function validateSchool(req, res, next) {
+  const { name, location, requested_funds } = req.body
+
+  if (isEmpty(req.body)) {
+    res.status(400).send({ 
+      message: "Missing school data." 
+    })
+
+  } else if (req.body && !name) {
+    res.status(400).send({
+      message: "Missing required name field." 
+    })
+
+  } else if (req.body && !location) {
+    res.status(400).send({
+      message: "Missing required location field." 
+    })
+
+  } else if (req.body && !requested_funds) {
+    res.status(400).send({ 
+      message: "Missing required requested funds data." 
+    })
+
+  } else if (req.body && !name && !location) {
+    res.status(400).send({ 
+      message: "Missing required name and location data." 
+  })
+
+  } else if (req.body && !location && !requested_funds) {
+    res.status(400).send({ 
+      message: "Missing required locatio nand requested funds data." 
+    })
+
+  } else if (req.body && !name && !location) {
+    res.status(400).send({ 
+      message: "Missing required name and location data." 
+    })
+  } else {
+    next();
+  }
+}
+
+function isEmpty(obj) {
+  for(var key in obj) {
+    if(obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
 }
 
 module.exports = router;
