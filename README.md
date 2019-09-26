@@ -8,8 +8,8 @@
 
 ## REGISTER
  `https://bw-luncher.herokuapp.com/api/admin/register`
- - POST request: expected object requires a unique email property and a password property. 
- - Example: `{ email: "testing123@email.com", password: "password123" }`
+ - POST request: expected object requires a unique email, password, and fullName property. 
+ - Example: `{ fullName: "Joe Schmoe", email: "testing123@email.com", password: "password123" }`
 
 ## LOGIN
  `https://bw-luncher.herokuapp.com/api/admin/login`

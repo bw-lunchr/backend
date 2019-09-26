@@ -40,7 +40,7 @@ router.route('/:id')
     })
 })
 // UPDATE school
-.put(restricted, validateSchool, (req, res) => {
+.put(restricted, validateUpdatedSchool, (req, res) => {
   let id = req.params.id;
   let updatedSchool = req.body;
   Schools.update(updatedSchool, id)
@@ -57,46 +57,14 @@ router.route('/:id')
     })
 })
 
-function validateSchool(req, res, next) {
-  const { name, location, requested_funds } = req.body
-
+function validateUpdatedSchool(req, res, next) {
   if (isEmpty(req.body)) {
-    res.status(400).send({ 
-      message: "Missing school data." 
-    })
-
-  } else if (req.body && !name) {
-    res.status(400).send({
-      message: "Missing required name field." 
-    })
-
-  } else if (req.body && !location) {
-    res.status(400).send({
-      message: "Missing required location field." 
-    })
-
-  } else if (req.body && !requested_funds) {
-    res.status(400).send({ 
-      message: "Missing required requested funds data." 
-    })
-
-  } else if (req.body && !name && !location) {
-    res.status(400).send({ 
-      message: "Missing required name and location data." 
-  })
-
-  } else if (req.body && !location && !requested_funds) {
-    res.status(400).send({ 
-      message: "Missing required locatio nand requested funds data." 
-    })
-
-  } else if (req.body && !name && !location) {
-    res.status(400).send({ 
-      message: "Missing required name and location data." 
-    })
+    res.status(400).json({ message: "No object data." })
   } else {
     next();
   }
+
+  next();
 }
 
 function isEmpty(obj) {

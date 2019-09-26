@@ -9,7 +9,7 @@ const restricted = require('./authenticate-middleware.js')
 
 // for endpoints beginning with /api/auth
 // REGISTER ENDPOINT
-router.post('/register', (req, res) => {
+router.post('/register', validateNewAdmin, (req, res) => {
   let admin = req.body;
   const hash = bcrypt.hashSync(admin.password, 10); // 2 ^ n
   admin.password = hash;
@@ -133,6 +133,8 @@ function generateToken(admin) {
   return jwt.sign(payload, secrets.jwtSecret, options)
 }
 
+
+// --- CUSTOM MIDDLEWARE --- //
 function validateAdminId(req, res, next) {
   const id = req.params.id;
   Admins.findById(id)  
@@ -144,6 +146,47 @@ function validateAdminId(req, res, next) {
     })
     next();
 };
+
+function validateNewAdmin(req, res, next) {
+  const { fullName, email, password } = req.body;
+
+  if (isEmpty(req.body)) {
+    res.status(400).send({ 
+      message: "Missing admin data." 
+    })
+  } else if (req.body && !fullName) {
+    res.status(400).send({
+      message: "Missing required name field." 
+    })
+
+  } else if (req.body && !email) {
+    res.status(400).send({
+      message: "Missing required email field." 
+    })
+
+  } else if (req.body && !password) {
+    res.status(400).send({ 
+      message: "Missing required password field." 
+    })
+
+  } else if (req.body && !name && !email) {
+    res.status(400).send({ 
+      message: "Missing required name and email fields." 
+  })
+
+  } else if (req.body && !email && !password) {
+    res.status(400).send({ 
+      message: "Missing required email and password fields." 
+    })
+
+  } else if (req.body && !name && !email) {
+    res.status(400).send({ 
+      message: "Missing required name and email fields." 
+    })
+  } else {
+    next();
+  }
+}
 
 function validateSchool(req, res, next) {
   const { name, location, requested_funds } = req.body
